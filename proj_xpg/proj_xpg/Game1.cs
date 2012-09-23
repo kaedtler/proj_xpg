@@ -19,6 +19,13 @@ namespace proj_xpg
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D tempMap;
+        SpriteFont tempFont;
+        float tempFloat = 1;
+
+        Camera camera;
+        GamePadState lastGamePadState;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -26,6 +33,7 @@ namespace proj_xpg
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+
         }
 
         /// <summary>
@@ -36,7 +44,7 @@ namespace proj_xpg
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Fügen Sie Ihre Initialisierungslogik hier hinzu
+            camera = new Camera();
 
             base.Initialize();
         }
@@ -49,6 +57,10 @@ namespace proj_xpg
         {
             // Erstellen Sie einen neuen SpriteBatch, der zum Zeichnen von Texturen verwendet werden kann.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            tempFont = Content.Load<SpriteFont>("textbox");
+            tempMap = Content.Load<Texture2D>("full map scale");
+            camera = new Camera(Convert.ToInt32(tempMap.Width), Convert.ToInt32(tempMap.Height));
 
             // TODO: Verwenden Sie this.Content, um Ihren Spiel-Inhalt hier zu laden
         }
@@ -73,8 +85,20 @@ namespace proj_xpg
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Fügen Sie Ihre Aktualisierungslogik hier hinzu
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start == ButtonState.Released)
+            {
+                graphics.IsFullScreen = !graphics.IsFullScreen;
+                graphics.ApplyChanges();
+            }
 
+            if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed && lastGamePadState.DPad.Left == ButtonState.Released)
+                tempFloat -= 0.05f;
+            if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed && lastGamePadState.DPad.Right == ButtonState.Released)
+                tempFloat += 0.05f;
+            Vector2 cp = new Vector2(GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X, -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y) * gameTime.ElapsedGameTime.Milliseconds;
+            camera.SetPosition(cp + camera.Position, false);
+
+            lastGamePadState = GamePad.GetState(PlayerIndex.One);
             base.Update(gameTime);
         }
 
@@ -86,7 +110,13 @@ namespace proj_xpg
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Fügen Sie Ihren Zeichnungscode hier hinzu
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.Matrix * Matrix.CreateScale(tempFloat));
+            spriteBatch.Draw(tempMap, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(tempFont, (Convert.ToInt16(tempFloat * 100)).ToString() + "%\n" + (Convert.ToInt16(tempFloat * 80)).ToString() + " Pixel²\n" + (1280 / (tempFloat * 80)).ToString("F3") + "x" + (720 / (tempFloat * 80)).ToString("F3") + " Kacheln", new Vector2(20, 20), Color.Red);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
