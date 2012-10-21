@@ -33,7 +33,7 @@ namespace proj_xpg
 
         public Camera(int width, int height)
         {
-            this.maxPosition = new Vector2(width - 1280, height - 720);
+            this.maxPosition = new Vector2(Math.Max(width - 1280, 0), Math.Max(height - 720, 0));
         }
 
 

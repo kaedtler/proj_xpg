@@ -19,12 +19,11 @@ namespace proj_xpg
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D tempMap;
-        SpriteFont tempFont;
-        float tempFloat = 1;
+        Map testMap;
 
         Camera camera;
         GamePadState lastGamePadState;
+        KeyboardState lastKeyboardState;
 
         public Game1()
         {
@@ -57,10 +56,10 @@ namespace proj_xpg
         {
             // Erstellen Sie einen neuen SpriteBatch, der zum Zeichnen von Texturen verwendet werden kann.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            testMap = new Map(Content.Load<xpgDataLib.Map>("Data/Maps/map"), this.Content);
 
-            tempFont = Content.Load<SpriteFont>("textbox");
-            tempMap = Content.Load<Texture2D>("full map scale");
-            camera = new Camera(Convert.ToInt32(tempMap.Width), Convert.ToInt32(tempMap.Height));
+
+            camera = new Camera(Convert.ToInt32(testMap.Width) * 64, Convert.ToInt32(testMap.Height) * 64);
 
             // TODO: Verwenden Sie this.Content, um Ihren Spiel-Inhalt hier zu laden
         }
@@ -81,24 +80,18 @@ namespace proj_xpg
         /// <param name="gameTime">Bietet einen Schnappschuss der Timing-Werte.</param>
         protected override void Update(GameTime gameTime)
         {
+            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+            KeyboardState keyboardState = Keyboard.GetState();
+
             // Ermöglicht ein Beenden des Spiels
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start == ButtonState.Released)
-            {
-                graphics.IsFullScreen = !graphics.IsFullScreen;
-                graphics.ApplyChanges();
-            }
-
-            if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed && lastGamePadState.DPad.Left == ButtonState.Released)
-                tempFloat -= 0.05f;
-            if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed && lastGamePadState.DPad.Right == ButtonState.Released)
-                tempFloat += 0.05f;
-            Vector2 cp = new Vector2(GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X, -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y) * gameTime.ElapsedGameTime.Milliseconds;
-            camera.SetPosition(cp + camera.Position, false);
+            camera.SetPosition(new Vector2(gamePadState.ThumbSticks.Left.X, -gamePadState.ThumbSticks.Left.Y) * gameTime.ElapsedGameTime.Milliseconds + camera.Position, false);
+            camera.SetPosition(new Vector2((keyboardState.IsKeyDown(Keys.Left) ? -1 : 0) + (keyboardState.IsKeyDown(Keys.Right) ? 1 : 0), (keyboardState.IsKeyDown(Keys.Up) ? -1 : 0) + (keyboardState.IsKeyDown(Keys.Down) ? 1 : 0)) * gameTime.ElapsedGameTime.Milliseconds + camera.Position, false);
 
             lastGamePadState = GamePad.GetState(PlayerIndex.One);
+            lastKeyboardState = Keyboard.GetState();
             base.Update(gameTime);
         }
 
@@ -108,14 +101,10 @@ namespace proj_xpg
         /// <param name="gameTime">Bietet einen Schnappschuss der Timing-Werte.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.Matrix * Matrix.CreateScale(tempFloat));
-            spriteBatch.Draw(tempMap, new Vector2(0, 0), Color.White);
-            spriteBatch.End();
-
-            spriteBatch.Begin();
-            spriteBatch.DrawString(tempFont, (Convert.ToInt16(tempFloat * 100)).ToString() + "%\n" + (Convert.ToInt16(tempFloat * 80)).ToString() + " Pixel²\n" + (1280 / (tempFloat * 80)).ToString("F3") + "x" + (720 / (tempFloat * 80)).ToString("F3") + " Kacheln", new Vector2(20, 20), Color.Red);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camera.Matrix);
+            testMap.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

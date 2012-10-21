@@ -48,7 +48,7 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
@@ -84,9 +85,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\xpgDataLib\xpgDataLib.csproj">
+      <Project>{35895190-c08a-4a16-b3da-3046b623d8fe}</Project>
+      <Name>xpgDataLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\proj_xpgContent\proj_xpgContent.contentproj">
-      <Name>proj_xpgContent</Name>
+      <Name>proj_xpgContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{4B8471B9-F594-46C2-8EDC-BB509775C34A}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
