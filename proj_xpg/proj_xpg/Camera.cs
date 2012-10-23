@@ -17,7 +17,7 @@ namespace proj_xpg
         }
         public Rectangle ViewPort
         {
-            get { return new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), 1280, 720); }
+            get { return new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Game1.Width, Game1.Height); }
         }
 
         public Camera()
@@ -27,20 +27,20 @@ namespace proj_xpg
 
         public Camera(Vector2 maxPosition)
         {
-            this.maxPosition = maxPosition - new Vector2(1280, 720);
+            this.maxPosition = maxPosition - new Vector2(Game1.Width, Game1.Height);
         }
 
 
         public Camera(int width, int height)
         {
-            this.maxPosition = new Vector2(Math.Max(width - 1280, 0), Math.Max(height - 720, 0));
+            this.maxPosition = new Vector2(Math.Max(width - Game1.Width, 0), Math.Max(height - Game1.Height, 0));
         }
 
 
         public void SetPosition(Vector2 position, bool center)
         {
             if (center)
-                position = new Vector2(position.X - 640, position.Y - 360);
+                position = new Vector2(position.X - Game1.Width/2, position.Y - Game1.Height/2);
             //this.position = position;
             Position = new Vector2(Math.Min(Math.Max(Convert.ToInt32(position.X), 0), maxPosition.X), Math.Min(Math.Max(Convert.ToInt32(position.Y), 0), maxPosition.Y));
         }

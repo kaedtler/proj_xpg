@@ -31,7 +31,7 @@ namespace proj_xpg
                 for (int y = 0; y < tiles[z].Length; y++)
                     for (int x = 0; x < tiles[z][y].Length; x++)
                     {
-                        spriteBatch.Draw(texture, new Rectangle(x * 64, y * 64, 64, 64), new Rectangle((tiles[z][y][x] - 1) % 2 * texture.Width / 2, (tiles[z][y][x] - 1) / 2 * texture.Width / 2, texture.Width / 2, texture.Width / 2), Color.White);
+                        spriteBatch.Draw(texture, new Rectangle(x * Game1.TilesWidth, y * Game1.TilesHeight, Game1.TilesWidth, Game1.TilesHeight), new Rectangle((tiles[z][y][x] - 1) % 2 * texture.Width / 2, (tiles[z][y][x] - 1) / 2 * texture.Width / 2, texture.Width / 2, texture.Width / 2), Color.White);
                     }
         }
     }

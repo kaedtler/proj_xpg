@@ -19,6 +19,15 @@ namespace proj_xpg
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        const float TilesX = 20.0f;
+        const float TilesY = 11.25f;
+
+        static public int Height;
+        static public int Width;
+
+        static public int TilesHeight { get { return Height / (int)TilesY; } }
+        static public int TilesWidth { get { return Width / (int)TilesX; } }
+
         Map testMap;
 
         Camera camera;
@@ -30,8 +39,11 @@ namespace proj_xpg
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 640;
+            graphics.PreferredBackBufferHeight = 360;
+
+            Height = graphics.PreferredBackBufferHeight;
+            Width = graphics.PreferredBackBufferWidth;
 
         }
 
