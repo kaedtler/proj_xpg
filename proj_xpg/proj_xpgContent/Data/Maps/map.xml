@@ -16,6 +16,6 @@
         <Item>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</Item>
       </Item>
     </Tiles>
-    <TextureString>tileset01</TextureString>
+    <Tileset>tileset01</Tileset>
   </Asset>
 </XnaContent>

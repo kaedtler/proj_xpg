@@ -17,6 +17,6 @@ namespace xpgDataLib
         /// Z, Y, X
         /// </summary>
         public byte[][][] Tiles;
-        public String TextureString;
+        public String Tileset;
     }
 }

@@ -14,7 +14,8 @@ namespace proj_xpg
         /// Z, Y, X
         /// </summary>
         byte[][][] tiles;
-        Texture2D texture;
+        Tileset tileset;
+        Player player;
 
         public int Height { get { return tiles[0].Length; } }
         public int Width { get { return tiles[0][0].Length; } }
@@ -22,17 +23,19 @@ namespace proj_xpg
         public Map(xpgDataLib.Map data, ContentManager Content)
         {
             tiles = data.Tiles;
-            texture = Content.Load<Texture2D>("Graphics/Tilesets/" + data.TextureString);
+            tileset = new Tileset(Content.Load<xpgDataLib.Tileset>("Data/Tilesets/" + data.Tileset), Content);
         }
+        
+        public void AddPlayer(Player player)
+        {
+            this.player = player;
+        }
+
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int z = 0; z < tiles.Length; z++)
-                for (int y = 0; y < tiles[z].Length; y++)
-                    for (int x = 0; x < tiles[z][y].Length; x++)
-                    {
-                        spriteBatch.Draw(texture, new Rectangle(x * Game1.TilesWidth, y * Game1.TilesHeight, Game1.TilesWidth, Game1.TilesHeight), new Rectangle((tiles[z][y][x] - 1) % 2 * texture.Width / 2, (tiles[z][y][x] - 1) / 2 * texture.Width / 2, texture.Width / 2, texture.Width / 2), Color.White);
-                    }
+            tileset.Draw(spriteBatch, tiles);
+            if (player != null) player.Draw(spriteBatch);
         }
     }
 }

@@ -29,16 +29,22 @@ namespace temp_mapCreator
                 new byte[]{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}}};
 
             map.Tiles = l1;
-            map.TextureString = "tileset01";
+            map.Tileset = "tileset01";
+
+            Tileset tileset01 = new Tileset();
+            tileset01.File = "tileset01";
+            tileset01.TilesPerRow = 2;
+            tileset01.Collision = new byte[] { 0, 0, 0, 0 }; 
+
 
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
 
             using (XmlWriter writer = XmlWriter.Create("map.xml", settings))
-            {
                 IntermediateSerializer.Serialize(writer, map, null);
-            }
+            using (XmlWriter writer = XmlWriter.Create("tileset01.xml", settings))
+                IntermediateSerializer.Serialize(writer, tileset01, null);
         }
     }
 }

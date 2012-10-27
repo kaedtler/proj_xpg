@@ -11,6 +11,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace proj_xpg
 {
+    public enum Direction
+    {
+        Left = 0, Down = 1, Right = 2, Up = 3
+    }
+
     /// <summary>
     /// Dies ist der Haupttyp für Ihr Spiel
     /// </summary>
@@ -33,6 +38,7 @@ namespace proj_xpg
         Camera camera;
         GamePadState lastGamePadState;
         KeyboardState lastKeyboardState;
+        Player player;
 
         public Game1()
         {
@@ -69,9 +75,13 @@ namespace proj_xpg
             // Erstellen Sie einen neuen SpriteBatch, der zum Zeichnen von Texturen verwendet werden kann.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             testMap = new Map(Content.Load<xpgDataLib.Map>("Data/Maps/map"), this.Content);
+            player = new Player(Content.Load<Texture2D>("Graphics/Sprites/player"),
+                new Vector2(5, 5), Direction.Down, 2.5f);
+            testMap.AddPlayer(player);
 
 
-            camera = new Camera(Convert.ToInt32(testMap.Width) * 64, Convert.ToInt32(testMap.Height) * 64);
+
+            camera = new Camera(Convert.ToInt32(testMap.Width) * TilesWidth, Convert.ToInt32(testMap.Height) * TilesHeight);
 
             // TODO: Verwenden Sie this.Content, um Ihren Spiel-Inhalt hier zu laden
         }
@@ -115,7 +125,7 @@ namespace proj_xpg
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camera.Matrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, camera.Matrix);
             testMap.Draw(spriteBatch);
             spriteBatch.End();
 
